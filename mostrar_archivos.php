@@ -1,37 +1,21 @@
 <?php
 
 function tiempo(){
-	
-		locales("./carpeta");
-
-	sleep(2);
+	locales("./carpeta");
+	sleep(5);
 	tiempo();
 }
 
 
-
-
-
-	/**
-	* Funcion que muestra la estructura de carpetas a partir de la ruta dada.
-	*/
 	function locales($ruta){
-		
-		// Se comprueba que realmente sea la ruta de un directorio
 		if (is_dir($ruta)){
-			// Abre un gestor de directorios para la ruta indicada
 			$gestor = opendir($ruta);
-			
 			while ($archivo = readdir($gestor))  {
-			
 				$ruta_completa =  $archivo;
 				$listal[] = $ruta_completa;
 			}
-		
 			servidor("./carpeta1", $listal);
-			// Cierra el gestor de directorios
 			closedir($gestor);
-			
 		} else {
 			echo "No es una ruta de directorio valida<br/>";
 		}
@@ -40,20 +24,13 @@ function tiempo(){
 
 
 	function servidor($ruta , $listal){
-		
-		// Se comprueba que realmente sea la ruta de un directorio
 		if (is_dir($ruta)){
-			// Abre un gestor de directorios para la ruta indicada
 			$gestor = opendir($ruta);
-			
 			while ($archivo = readdir($gestor))  {
-			
 				$ruta_completa =  $archivo;
 				$listas[] = $ruta_completa;
 			}
-		
 			compara($listal, $listas);
-			// Cierra el gestor de directorios
 			closedir($gestor);
 			
 		} else {
@@ -63,45 +40,50 @@ function tiempo(){
 	}
 
 	function compara($locales , $alojados){
-		//$locales = json_encode($locales);
-		//$alojados = json_encode($alojados);
-		
-		//echo $locales;
-		//echo $alojados;
-		
-	
 		$resultado = array_diff($locales, $alojados);
-		//$resultado = json_encode($resultado);
-		//echo $resultado;
 		aenviar($resultado);	
-		
 	}
 
 	function aenviar($array){
-		$resultado = json_encode($array);
-		echo $resultado;
+		foreach ($array as $value){
+			$donde_esta='./carpeta/'.$value;
+			$donde_estara='./carpeta1/'.$value;
+			if(!copy($donde_esta, $donde_estara)){
 
+				$guardados[]=$value;
+			}
+		}
+
+		$nombre_archivo = 'logs.txt'; 
+		$contenido = $nombre; 
+		fopen($nombre_archivo, 'a+'); 
+
+		// Asegurarse primero de que el archivo existe y puede escribirse sobre el. 
+		if (is_writable("./logs".$nombre_archivo)) { 
+			echo "si esta";
+			die;
+   // En nuestro ejemplo estamos abriendo $nombre_archivo en modo de adicion. 
+   // El apuntador de archivo se encuentra al final del archivo, asi que 
+   // alli es donde ira $contenido cuando llamemos fwrite(). 
+   if (!$gestor = fopen($nombre_archivo, 'a')) { 
+         echo "No se puede abrir el archivo ($nombre_archivo)"; 
+         exit; 
+   } 
+
+   // Escribir $contenido a nuestro arcivo abierto. 
+   if (fwrite($gestor, $contenido) === FALSE) { 
+       echo "No se puede escribir al archivo ($nombre_archivo)"; 
+       exit; 
+   } 
+    
+   echo "&Eacute;xito, se escribi&oacute; ($contenido) al archivo ($nombre_archivo)"; 
+    
+   fclose($gestor); 
+
+} else { 
+   echo "No se puede escribir sobre el archivo $nombre_archivo"; 
+} 
 	}
-	
 ?>
-
-
-
-
-
-
-<html>
-<head>
-	<title>escanea que hay</title>
-</head>
-<body>
-	<div>
-		<h2>escanea que hay</h2>
 		<?php tiempo(); ?>
-		
-		
-	</div>
 
-	
-</body>
-</html>
